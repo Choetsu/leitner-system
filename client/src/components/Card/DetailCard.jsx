@@ -132,7 +132,7 @@ function DetailCard() {
                             Sélectionner un tag à ajouter
                         </h2>
                         <select
-                            onChanardge={(e) =>
+                            onChange={(e) =>
                                 handleTagSelection(e.target.value)
                             }
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-4"
