@@ -82,29 +82,27 @@ function ViewCard() {
 
     return (
         <div className="container mx-auto p-6 relative">
-            <div className="mb-4 text-center">
-                <h2 className="text-lg font-semibold mb-2 mt-6">
+            <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4">
                     Filtrer par tags
                 </h2>
-                <div className="flex justify-center items-center">
-                    <div className="flex flex-wrap justify-center">
-                        {tags.map((tag) => (
-                            <button
-                                key={tag.id}
-                                onClick={() => handleTagClick(tag.name)}
-                                className={`px-4 py-2 m-2 text-sm font-semibold rounded-full ${
-                                    selectedTags.includes(tag.name)
-                                        ? "bg-green-500 text-white"
-                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                                }`}
-                            >
-                                {tag.name}
-                            </button>
-                        ))}
-                    </div>
+                <div className="flex flex-wrap items-center gap-4">
+                    {tags.map((tag) => (
+                        <button
+                            key={tag.id}
+                            onClick={() => handleTagClick(tag.name)}
+                            className={`px-4 py-2 text-sm font-semibold rounded-full focus:outline-none ${
+                                selectedTags.includes(tag.name)
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
+                        >
+                            {tag.name}
+                        </button>
+                    ))}
                     <button
                         onClick={handleAddTag}
-                        className="ml-4 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"
+                        className="flex items-center justify-center w-10 h-10 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
                     >
                         <PlusCircleIcon className="w-6 h-6" />
                     </button>
@@ -115,54 +113,50 @@ function ViewCard() {
                     <div className="loader"></div>
                 </div>
             ) : (
-                <div className="flex flex-wrap justify-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {cards.map((card) => (
-                        // <Link to={`/cards/${card.id}`} key={card.id}>
-                        <div key={card.id} className="m-4">
-                            <div className="bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                <div className="p-4 leading-normal w-full">
-                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                        {card.question}
-                                    </h5>
-                                    <p
-                                        className={`mb-3 text-gray-700 dark:text-gray-400 ${
-                                            expandedCards.includes(card.id)
-                                                ? ""
-                                                : "overflow-hidden h-20"
-                                        }`}
+                        <div
+                            key={card.id}
+                            className="bg-white rounded-lg shadow-md overflow-hidden"
+                        >
+                            <div className="p-6">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-2 break-words">
+                                    {card.question}
+                                </h3>
+                                <p
+                                    className={`text-gray-600 ${
+                                        expandedCards.includes(card.id)
+                                            ? ""
+                                            : "h-24 overflow-hidden"
+                                    }`}
+                                >
+                                    {card.answer}
+                                </p>
+                                {card.answer.length > 100 && (
+                                    <button
+                                        onClick={() => handleExpand(card.id)}
+                                        className="text-blue-500 hover:underline focus:outline-none break-words"
                                     >
-                                        {card.answer}
-                                    </p>
-                                    {card.answer.length > 100 && (
-                                        <button
-                                            className="text-blue-500 hover:underline focus:outline-none"
-                                            onClick={() =>
-                                                handleExpand(card.id)
-                                            }
-                                        >
-                                            {expandedCards.includes(card.id)
-                                                ? "Réduire"
-                                                : "Lire la suite"}
-                                        </button>
-                                    )}
-                                    <Link
-                                        to={`/cards/${card.id}`}
-                                        key={card.id}
-                                        className="block mt-4 text-blue-500 hover:underline focus:outline-none"
-                                    >
-                                        Voir la fiche
-                                    </Link>
-                                </div>
+                                        {expandedCards.includes(card.id)
+                                            ? "Réduire"
+                                            : "Lire la suite"}
+                                    </button>
+                                )}
+                                <Link
+                                    to={`/cards/${card.id}`}
+                                    className="block mt-4 text-blue-500 hover:underline focus:outline-none"
+                                >
+                                    Voir la fiche
+                                </Link>
                             </div>
                         </div>
-                        // </Link>
                     ))}
                 </div>
             )}
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-8">
                 <button
                     onClick={handleCreateCard}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none mr-4"
+                    className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
                 >
                     Ajouter une fiche
                 </button>

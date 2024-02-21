@@ -4,7 +4,6 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "install": "npm install",
         "test": "jest --watchAll --verbose",
         "start": "node server.js",
         "dev": "nodemon server.js",
