@@ -45,6 +45,12 @@ module.exports = function CardService() {
         create: async function (data) {
             try {
                 const card = await Card.create(data);
+                await CardResponse.create({
+                    isValid: false,
+                    userId: card.userId,
+                    cardId: card.id,
+                    responseDate: new Date(),
+                });
 
                 return card;
             } catch (e) {
@@ -88,7 +94,9 @@ module.exports = function CardService() {
             }
         },
         delete: async (filters) => {
-            return Card.destroy({ where: filters });
+            await CardResponse.destroy({ where: { cardId: filters.id } });
+            const card = Card.destroy({ where: filters });
+            return card;
         },
         getUserReviewCards: async (userId) => {
             return Card.findAll({
@@ -205,13 +213,13 @@ module.exports = function CardService() {
             });
 
             const categoryDelays = {
-                FIRST: 0,
-                SECOND: 1,
-                THIRD: 2,
-                FOURTH: 4,
-                FIFTH: 8,
-                SIXTH: 16,
-                SEVENTH: 32,
+                FIRST: 1,
+                SECOND: 2,
+                THIRD: 4,
+                FOURTH: 8,
+                FIFTH: 16,
+                SIXTH: 32,
+                SEVENTH: 64,
                 DONE: Infinity,
             };
 
@@ -258,36 +266,18 @@ module.exports = function CardService() {
                 });
             }
 
-            const categoryDelays = {
-                FIRST: 1,
-                SECOND: 2,
-                THIRD: 4,
-                FOURTH: 8,
-                FIFTH: 16,
-                SIXTH: 32,
-                SEVENTH: 64,
-                DONE: Infinity,
-            };
+            const allCategories = [
+                "FIRST",
+                "SECOND",
+                "THIRD",
+                "FOURTH",
+                "FIFTH",
+                "SIXTH",
+                "SEVENTH",
+            ];
 
-            const lastResponseDate = response.responseDate;
-            const currentDate = new Date();
-            const timeDifference = Math.floor(
-                (currentDate - lastResponseDate) / (1000 * 60 * 60 * 24)
-            );
-
-            let newCategory = card.category;
-
-            for (const category in categoryDelays) {
-                if (timeDifference >= categoryDelays[category]) {
-                    if (category === card.category) {
-                        const currentIndex =
-                            Object.keys(categoryDelays).indexOf(category);
-                        const nextCategory =
-                            Object.keys(categoryDelays)[currentIndex + 1];
-                        newCategory = nextCategory ? nextCategory : "DONE";
-                    }
-                }
-            }
+            const currentIndex = allCategories.indexOf(card.category);
+            const newCategory = allCategories[currentIndex + 1];
 
             if (isValid) {
                 card.lastReviewedAt = new Date();

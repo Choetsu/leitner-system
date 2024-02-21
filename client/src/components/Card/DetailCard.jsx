@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-import { fetchCardById } from "../../services/cards";
+import { ArrowLeftIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { fetchCardById, deleteCard } from "../../services/cards";
 import {
     fetchTagsByUserId,
     addTagsByCard,
@@ -11,9 +11,9 @@ import {
 function DetailCard() {
     const [card, setCard] = useState({});
     const [tags, setTags] = useState([]);
-    const [showAddPopup, setShowAddPopup] = useState(false); // État pour afficher la popup d'ajout de tag
-    const [showRemovePopup, setShowRemovePopup] = useState(false); // État pour afficher la popup de suppression de tag
-    const [selectedTagId, setSelectedTagId] = useState(null); // État pour stocker l'ID du tag sélectionné
+    const [showAddPopup, setShowAddPopup] = useState(false);
+    const [showRemovePopup, setShowRemovePopup] = useState(false);
+    const [selectedTagId, setSelectedTagId] = useState(null);
     const cardId = useParams().id;
     const userId = localStorage.getItem("userId");
 
@@ -64,11 +64,16 @@ function DetailCard() {
         setShowRemovePopup(false);
         const updatedCard = await fetchCardById(cardId);
         setCard(updatedCard);
-        setSelectedTagId(null); // Réinitialiser l'ID du tag sélectionné
+        setSelectedTagId(null);
+    };
+
+    const handleCardDeletion = async () => {
+        await deleteCard(cardId);
+        window.location.replace("/cards");
     };
 
     return (
-        <div className="max-w-3xl mx-auto mt-8 p-4 bg-white rounded-lg shadow">
+        <div className="mx-auto mt-8 p-4 bg-white rounded-lg shadow max-w-5xl">
             <div className="flex items-center mb-4">
                 <Link
                     to="/cards"
@@ -77,11 +82,20 @@ function DetailCard() {
                     <ArrowLeftIcon className="w-6 h-6 mr-2" />
                     Retour
                 </Link>
+                <button
+                    onClick={handleCardDeletion}
+                    className="ml-auto bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none"
+                >
+                    <TrashIcon className="w-full h-5" />
+                </button>
             </div>
-            <h1 className="text-2xl font-bold mb-4">
-                Question : {card.question}
+            <h1 className="text-2xl font-bold mb-4 break-words">
+                Question :<span className="max-w-xl">{card.question}</span>
             </h1>
-            <p className="mb-4">Réponse : {card.answer}</p>
+            <p className="mb-4 break-words">
+                Réponse :<span className="max-w-xl">{card.answer}</span>
+            </p>
+
             <p className="mb-4">Catégorie : {card.category}</p>
             <p className="mb-4">Dernière révision : {card.lastReviewedAt}</p>
             <div className="mb-4">
@@ -106,7 +120,7 @@ function DetailCard() {
             </button>
             <button
                 onClick={handleRemoveTag}
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none"
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none mr-4"
             >
                 Supprimer un tag
             </button>
@@ -118,7 +132,9 @@ function DetailCard() {
                             Sélectionner un tag à ajouter
                         </h2>
                         <select
-                            onChange={(e) => handleTagSelection(e.target.value)}
+                            onChanardge={(e) =>
+                                handleTagSelection(e.target.value)
+                            }
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-4"
                         >
                             <option value="">Sélectionner un tag</option>
