@@ -1,2 +1,8 @@
+#Backend files and folders to ignore in git
 server/node_modules/
 postgres-data/
+
+#Frontend files and folders to ignore in git
+client/node_modules/
+client/build/
+
