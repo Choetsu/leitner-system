@@ -51,3 +51,31 @@ export const generateQuizz = async (userId, date) => {
         throw error;
     }
 };
+
+export const deleteCard = async (cardId) => {
+    try {
+        const response = await axios.delete(
+            `http://localhost:8080/cards/${cardId}`
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Erreur lors de la suppression de la carte :", error);
+        throw error;
+    }
+};
+
+export const answerQuizz = async (cardId, userId, isValid) => {
+    try {
+        const response = await axios.put(
+            `http://localhost:8080/cards/${cardId}/answer`,
+            {
+                userId,
+                isValid,
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Erreur lors de la réponse au quizz :", error);
+        throw error;
+    }
+};
