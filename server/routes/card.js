@@ -53,7 +53,7 @@ module.exports = new genericRouter(
             },
             {
                 handler: "answerQuizz",
-                method: "put",
+                method: "patch",
                 path: "/:cardId/answer",
                 middleware: [],
             },

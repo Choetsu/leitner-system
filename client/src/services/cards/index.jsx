@@ -66,7 +66,7 @@ export const deleteCard = async (cardId) => {
 
 export const answerQuizz = async (cardId, userId, isValid) => {
     try {
-        const response = await axios.put(
+        const response = await axios.patch(
             `http://localhost:8080/cards/${cardId}/answer`,
             {
                 userId,
