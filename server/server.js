@@ -11,7 +11,7 @@ const app = express();
 app.use(
     cors({
         origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
@@ -26,6 +26,7 @@ const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
     res.send("Hello World");
+    res.status(200);
 });
 
 app.listen(PORT, () => {
